@@ -1,0 +1,11 @@
+.no-order {
+  height: 128px;
+  margin: 6px;
+  border-radius: 2px;
+  font-size: 16px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.04);
+}
