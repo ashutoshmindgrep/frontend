@@ -3,6 +3,9 @@ body,
 h1,
 h2,
 h3,
+h4,
+h5,
+h6,
 p {
   margin: 0;
   padding: 0;
@@ -28,25 +31,11 @@ p {
 }
 
 .wrapper {
-  height: calc(100vh - 64px);
+  height: calc(100vh - 100px);
   margin: 12px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   column-gap: 12px;
   text-align: center;
-}
-
-.wrapper > .app {
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.app > h2 {
-  height: 32px;
-  line-height: 32px;
-  font-size: 16px;
-  padding: 0 12px;
-  border-bottom: 1px solid #ccc;
-  text-align: left;
-  font-weight: normal;
+  background: white;
 }

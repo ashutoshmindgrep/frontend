@@ -1,0 +1,28 @@
+[
+  {
+    "id": 1,
+    "createdAt": "2022-12-09T05:33:39.590Z",
+    "name": "Kumar Veg",
+    "since": "2001-01-01T05:28:00.000Z",
+    "isOpen": true,
+    "opsStartTime": "2022-12-09T10:00:45.973Z",
+    "opsEndTime": "2022-12-09T22:00:45.973Z",
+    "ownerId": 1,
+    "slug": "kumar-veg-dehradun",
+    "description": "Dehradun's oldest pure veg restaurant",
+    "location": "dehradun"
+  },
+  {
+    "id": 2,
+    "createdAt": "2022-12-09T05:33:39.590Z",
+    "name": "Chhaya Cafe",
+    "since": "2001-01-01T05:28:00.000Z",
+    "isOpen": true,
+    "opsStartTime": "2022-12-09T10:00:45.973Z",
+    "opsEndTime": "2022-12-09T22:00:45.973Z",
+    "ownerId": 1,
+    "slug": "chhaya-cafe-rajpur",
+    "description": "Quiet cafe in Rajpur, Dehradun",
+    "location": "dehradun"
+  }
+]
