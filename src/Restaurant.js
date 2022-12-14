@@ -1,5 +1,5 @@
 import { Layout, List, Tag, Typography, Button, Card, Divider } from "antd";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Orders = () => {
   const [orders, setOrders] = useState([
@@ -7,8 +7,46 @@ const Orders = () => {
     { orderStatus: "" },
   ]);
 
-  const acceptOrder = (orderId) => {};
-  const rejectOrder = (orderId) => {};
+  const fetchOrders = () => {
+    fetch("/fetch-orders")
+      .then((res) => res.json())
+      .then((response) => {
+        setOrders(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  const acceptOrder = (orderId) => {
+    fetchData(`/accept-or-reject-order/${orderId}`, "POST", {
+      accept: true,
+    })
+      .then((res) => res.json())
+      .then((response) => {
+        console.log("order accepted");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const rejectOrder = (orderId) => {
+    fetchData(`/accept-or-reject-order/${orderId}`, "POST", {
+      accept: false,
+    })
+      .then((res) => res.json())
+      .then((response) => {
+        console.log("order accepted");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <>
@@ -63,7 +101,6 @@ const Orders = () => {
 };
 
 export default function Restaurant() {
-  const [order] = useState(0);
   return (
     <Layout style={{ border: "1px solid rgba(0, 0, 0, 0.1)" }}>
       <Layout.Header style={{ background: "#f95959" }}>

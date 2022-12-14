@@ -1,6 +1,7 @@
-export const fetchData = (url, method = "get") => {
+export const fetchData = (url, method = "GET", data) => {
   return fetch(url, {
-    method: "get",
+    method: method,
+    data,
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",

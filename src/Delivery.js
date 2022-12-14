@@ -1,11 +1,28 @@
 import { Layout, Card, List, Button, Typography, Divider } from "antd";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { fetchData } from "./service";
 
 const Deliveries = () => {
   const [deliveries, setDelerivies] = useState([
     { orderStatus: "WAITING_FOR_APPROVAL_FROM_RESTAURANT" },
     { orderStatus: "" },
   ]);
+
+  const fetchDeliveries = () => {
+    // actually it's fetch orders
+    fetchData("/fetch-orders")
+      .then((res) => res.json())
+      .then((response) => {
+        setDelerivies(response);
+      });
+  };
+
+  useEffect(() => {
+    fetchDeliveries();
+  }, []);
+
+  const acceptDelivery = (deliveryId) => {};
+  const rejectDelivery = (deliveryId) => {};
 
   return (
     <>
