@@ -8,6 +8,7 @@ import {
   Skeleton,
   Space,
   Typography,
+  Alert,
 } from "antd";
 import {
   ArrowLeftOutlined,
@@ -22,7 +23,10 @@ const RestaurantList = ({ navigateToMenuPage }) => {
 
   useEffect(() => {
     setLoading(true);
-    fetchData("stub/restaurants.json")
+    fetchData(
+      "http://demo.godspeed.systems/find-restaurant-near-me?city=dehradun",
+      "POST"
+    )
       .then((response) => {
         setLoading(false);
         setRestaurants(response);
@@ -43,7 +47,7 @@ const RestaurantList = ({ navigateToMenuPage }) => {
         renderItem={(item) => (
           <List.Item
             onClick={() => {
-              navigateToMenuPage(item.id);
+              navigateToMenuPage(item);
             }}
             style={{ cursor: "pointer" }}
           >
@@ -80,13 +84,28 @@ const MenuHeader = ({ title, onBack }) => {
   );
 };
 
-const RestaurantMenu = ({ restaurantId, onBack }) => {
+const RestaurantMenu = ({ restaurantId, onBack, placeOrderSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [menuItems, setMenuItems] = useState([]);
   const [order, setOrder] = useState({ orderItems: [] });
 
   const placeOrder = () => {
-    console.log(order);
+    let data = {
+      frmoRestaurant: order.fromRestaurantId,
+      orderItems: order.orderItems.map(({ id, quantity }) => ({
+        menuItemId: id,
+        quantity,
+      })),
+    };
+    fetchData("http://demo.godspeed.systems/place-my-order", "POST", data)
+      .then((response) => {
+        placeOrderSuccess();
+        setOrder({ orderItems: [], placed: true });
+      })
+      .catch((error) => {
+        console.log(error);
+        // alert("some error, placing order");
+      });
   };
 
   const addItemToOrder = (item, quantity = 1) => {
@@ -136,7 +155,9 @@ const RestaurantMenu = ({ restaurantId, onBack }) => {
 
   useEffect(() => {
     setLoading(true);
-    fetchData(`stub/${restaurantId}.json`).then((response) => {
+    fetchData(
+      `http://demo.godspeed.systems/fetch-restaurant-menu${restaurantId}`
+    ).then((response) => {
       setMenuItems(response);
       setLoading(false);
     });
@@ -176,7 +197,7 @@ const RestaurantMenu = ({ restaurantId, onBack }) => {
             <List.Item actions={[_actions]}>
               <Skeleton title={false} loading={loading}>
                 <List.Item.Meta
-                  title={item.title}
+                  title={item.name}
                   description={item.description}
                 ></List.Item.Meta>
               </Skeleton>
@@ -193,7 +214,7 @@ const RestaurantMenu = ({ restaurantId, onBack }) => {
           renderItem={(orderItem) => {
             return (
               <List.Item>
-                {orderItem.title} x {orderItem.quantity}
+                {orderItem.name} x {orderItem.quantity}
               </List.Item>
             );
           }}
@@ -209,17 +230,25 @@ const RestaurantMenu = ({ restaurantId, onBack }) => {
           }
         ></List>
       ) : null}
+      {order.placed ? (
+        <Alert
+          style={{ marginTop: "12px", textAlign: "left" }}
+          type="success"
+          message="Order placed! Waiting for restaurant to accept your order."
+        />
+      ) : null}
     </>
   );
 };
 
-export default function Customer() {
+export default function Customer({ selectRestaurant, placeOrderSuccess }) {
   const [routerState, setRouterState] = useState(0);
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
 
-  const navigateToMenuPage = (id) => {
+  const navigateToMenuPage = (item) => {
     setRouterState(1);
-    setSelectedRestaurant(id);
+    setSelectedRestaurant(item.id);
+    selectRestaurant(item);
   };
 
   return (
@@ -232,9 +261,11 @@ export default function Customer() {
           <RestaurantList navigateToMenuPage={navigateToMenuPage} />
         ) : routerState === 1 ? (
           <RestaurantMenu
+            placeOrderSuccess={placeOrderSuccess}
             restaurantId={selectedRestaurant}
             onBack={() => {
               setRouterState(0);
+              selectRestaurant(null);
             }}
           />
         ) : null}
